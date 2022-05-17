@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<title>Vue state problem</title>
+        <script src="vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1></component1>
+            <component2></component2>
+        </div>
+        <script>
+            const component1 = {
+                data() {
+                    return { count: 0 }
+                },
+                template: `<div>count 1 is {{ count }}</div>
+                           <button @click="count++">+</button>`
+            }
+            const component2 = {
+                data() {
+                    return { count: 0 }
+                },
+                template: `<div>count 2 is {{ count }}</div>
+                           <button @click="count++">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+
+          createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+              }
+            }
+          }).mount('#app')
+        </script>
+    </body>
+</html>
+

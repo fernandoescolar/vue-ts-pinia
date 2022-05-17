@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<title>Vue flux architecture</title>
+        <script src="vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1></component1>
+            <component2></component2>
+        </div>
+        <script>
+            const { ref } = Vue
+
+            const store = {
+              state: { counter: ref(0) }
+            }
+
+            const dispatcher = {
+              increment() {
+                store.state.counter.value = store.state.counter.value + 1
+              }
+            }
+
+            const incrementAction = () => dispatcher.increment()
+
+            const component1 = {
+                computed: {
+                    count: () => {
+                        return store.state.counter.value
+                    }
+                },
+                methods: {
+                  incrementAction
+                },
+                template: `<div>count 1 is {{ count }}</div>
+                           <button @click="incrementAction()">+</button>`
+            }
+
+            const component2 = {
+                computed: {
+                    count: () => {
+                        return store.state.counter.value
+                    }
+                },
+                methods: {
+                  incrementAction
+                },
+                template: `<div>count 2 is {{ count }}</div>
+                           <button @click="incrementAction()">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+
+          createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+              }
+            }
+          }).mount('#app')
+        </script>
+    </body>
+</html>
+

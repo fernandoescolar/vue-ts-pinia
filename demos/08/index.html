@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		  <meta charset="utf-8">
+		  <title>Vue with pinia</title>
+      <script src="vue.global.js"></script>
+      <script src="vue-demi.iife.js"></script>
+      <script src="pinia.iife.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1></component1>
+            <component2></component2>
+        </div>
+
+        <script>
+          const { defineStore } = Pinia
+
+          const useStore = defineStore('counter', {
+            state: () => {
+              return { count: 0 }
+            },
+            actions: {
+              increment() {
+                this.count++
+              },
+            },
+          })
+        </script>
+        <script>
+            const { mapState, mapActions } = Pinia
+
+            const component1 = {
+              computed: {
+                ...mapState(useStore, ['count'])
+              },
+              methods: {
+                ...mapActions(useStore, ['increment']),
+              },
+              template: `<div>count 1 is {{ count }}</div>
+                         <button @click="increment()">+</button>`
+            }
+
+            const component2 = {
+              computed: {
+                ...mapState(useStore, ['count'])
+              },
+              methods: {
+                ...mapActions(useStore, ['increment']),
+              },
+              template: `<div>count 2 is {{ count }}</div>
+                         <button @click="increment()">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+          const { createPinia } = Pinia
+
+          const app = createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+              }
+            }
+          })
+          app.use(createPinia())
+          app.mount('#app')
+        </script>
+    </body>
+</html>
+

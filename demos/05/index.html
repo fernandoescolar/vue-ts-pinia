@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<title>Vue redux style</title>
+        <script src="vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1></component1>
+            <component2></component2>
+        </div>
+        <script>
+            const store = {
+              state: { counter: 0 }
+            }
+
+            const reducers = (action) => {
+              switch (action.type) {
+                case 'increment':
+                  store.state = { counter: store.state.counter + 1 }
+              }
+
+              return store.state
+            }
+
+            const incrementAction = { type: 'increment' }
+
+            const component1 = {
+              data() {
+                return {
+                  state: { counter: store.state.counter }
+                }
+              },
+              methods: {
+                increment() {
+                  this.state = reducers(incrementAction)
+                }
+              },
+              template: `<div>count 1 is {{ state.counter }}</div>
+                         <button @click="increment()">+</button>`
+            }
+
+            const component2 = {
+              data() {
+                return {
+                  state: { counter: store.state.counter }
+                }
+              },
+              methods: {
+                increment() {
+                  this.state = reducers(incrementAction)
+                }
+              },
+              template: `<div>count 2 is {{ state.counter }}</div>
+                         <button @click="increment()">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+
+          createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+              }
+            }
+          }).mount('#app')
+        </script>
+    </body>
+</html>
+

@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Typescript y Vue dándose Pinia</title>
+
+    <meta name="description" content="Vue3 with Typescript and Pinia">
+    <meta name="author" content="Fernando Escolar">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/moon.css" id="theme">
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+    <style>
+      .reveal .code-wrapper code {
+        white-space: pre;
+        overflow: hidden;
+      }
+      .left {
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>Vue + TypeScript + Pinia</h2>
+          <p>
+            <img src="images/vue.png" alt="Vue" width="20%">
+            <img src="images/ts.png" alt="TypeScript" width="20%">
+            <img src="images/pinia.png" alt="Pinia" width="20%">
+          </p>
+        </section>
+
+        <section>
+          <h2>About me</h2>
+          <p class="left">
+            <img src="images/fernandoescolar.png" style="border-radius: 15px; box-shadow: 2px 2px 5px" alt="Fernando Escolar" width="20%" align="right">
+            ❤️‍🔥 Estrella Galicia<br>
+            🖕 Verdura<br>
+            🎨 Naranja<br>
+            🎮 Pokemon Arceus<br>
+            🧑‍💼 SCRM Lidl International Hub<br>
+            🌐 developerro.com
+          </p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## The problem
+
+            ```js[1-7|9-15|3,11]
+            const component1 = {
+              data() {
+                return { count: 0 }
+              },
+              template: `<div>count 1 is {{ count }}</div>
+                      <button @click="count++">+</button>`
+            }
+
+            const component2 = {
+              data() {
+                return { count: 0 }
+              },
+              template: `<div>count 2 is {{ count }}</div>
+                      <button @click="count++">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>The problem</h2>
+          <iframe src="../demos/01/index.html" style="background: white"></iframe>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## A solution
+
+            ```js[2,8|4,10]
+            const component1 = {
+              props: [ 'count' ],
+              template: `<div>count 1 is {{ count }}</div>
+                      <button @click="$emit('increment')">+</button>`
+            }
+
+            const component2 = {
+              props: [ 'count' ],
+              template: `<div>count 2 is {{ count }}</div>
+                      <button @click="$emit('increment')">+</button>`
+            }
+            ```
+
+            ```html
+            <component1 :count="count" @increment="count++"></component1>
+<component2 :count="count" @increment="count++"></component2>
+            ```
+            <!-- .element: class="fragment" -->
+          </script>
+        </section>
+
+        <section>
+          <iframe src="../demos/02/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <h2>Components model</h2>
+          <img src="images/components.png" alt="Components">
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Mediator pattern
+
+            ```js[1-9|11-25]
+            const mediator = {
+              actions: [],
+              subscribe(action) {
+                this.actions.push(action)
+              },
+              publish() {
+                this.actions.forEach(action => action())
+              }
+            }
+
+            const component = {
+              data() {
+                return { count: 0 }
+              },
+              methods: {
+                increment() {
+                  mediator.publish()
+                }
+              },
+              mounted() {
+                mediator.subscribe(() => this.count++)
+              },
+              template: `<div>count is {{ count }}</div>
+                      <button @click="increment()">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Mediator pattern</h2>
+          <iframe src="../demos/03/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <h2>Zombie notification bug</h2>
+          <div class="mermaid">
+            flowchart TD
+              Action --> Controller
+              Controller --> Model1
+              Controller --> Model2
+              Controller --> Model3
+              Model1 --> View1
+              Model1 --> View2
+              Model2 --> View3
+              Model3 --> View4
+              Model3 --> View5
+              Model3 --> View6
+          </div>
+        </section>
+
+        <section>
+          <h2>Flux architecture</h2>
+          <div class="mermaid">
+            flowchart LR
+              Action --> Dispatcher
+              Dispatcher --> Store
+              Store --> View
+          </div>
+          <p class="fragment left">Single data flow direction</p>
+          <p class="fragment left">Single dispatcher</p>
+          <p class="fragment left">Single data source of truth</p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Flux architecture
+
+            ```js[1-3|5-9|11|13-24]
+            const store = {
+              state: { counter: ref(0) }
+            }
+
+            const dispatcher = {
+              increment() {
+                store.state.counter.value = store.state.counter.value + 1
+              }
+            }
+
+            const incrementAction = () => dispatcher.increment()
+
+            const component = {
+              computed: {
+                count: () => {
+                  return store.state.counter.value
+                }
+              },
+              methods: {
+              incrementAction
+              },
+              template: `<div>count is {{ count }}</div>
+                      <button @click="incrementAction()">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Flux architecture</h2>
+          <iframe src="../demos/04/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <h2>Redux</h2>
+          <div class="mermaid">
+            graph LR
+              Action --> Reducers
+              Reducers --> Store
+              Store --subscribe--> Component
+              Component --dispatch--> Action
+          </div>
+          <p class="fragment left">Data is inmutable</p>
+          <p class="fragment left">Reducers as time machine (no dispatcher)</p>
+          <p class="fragment left">Only one <s>complex</s> store</p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Redux
+
+            ```js[1-3|5-12|14|16-29]
+            const store = {
+              state: { counter: 0 }
+            }
+
+            const reducers = (action) => {
+              switch (action.type) {
+                case 'increment':
+                  store.state = { counter: store.state.counter + 1 }
+              }
+
+              return store.state
+            }
+
+            const incrementAction = { type: 'increment' }
+
+            const component = {
+              data() {
+                return {
+                  state: { counter: store.state.counter }
+                }
+              },
+              methods: {
+                increment() {
+                  this.state = reducers(incrementAction)
+                }
+              },
+              template: `<div>count is {{ state.counter }}</div>
+                      <button @click="increment()">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Redux</h2>
+          <iframe src="../demos/05/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <h2>Vuex</h2>
+          <div class="mermaid">
+            graph LR
+              Action --> Mutations
+              Mutations --> Store
+              Component --map--> Getter
+              Getter --> Store
+              Component --dispatch--> Action
+          </div>
+          <p class="fragment left">Official flux implementation</p>
+          <p class="fragment left">Reactive (no immutable)</p>
+          <p class="fragment left">With mutations (no reducers)</p>
+          <p class="fragment left">With getters (almost single data flow direction)</p>
+          <p class="fragment left">With modules (multiple sources of truth)</p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Vuex
+
+            ```js[1-3|5-7|9-13|15-19|21-26|28-39]
+            const state = {
+              counter: ref(0)
+            }
+
+            const getters = {
+              counter: () => state.counter.value
+            }
+
+            const mutations =  {
+              increment(state) {
+                state.counter.value = state.counter.value + 1
+              }
+            }
+
+            const actions = {
+              increment() {
+                mutations.increment(state)
+              }
+            }
+
+            const store = {
+              getters,
+              dispath(action) {
+                actions[action]()
+              }
+            }
+
+            const component = {
+              computed: {
+                counter: () => store.getters.counter()
+              },
+              methods: {
+                increment() {
+                  store.dispath('increment')
+                }
+              },
+              template: `<div>count is {{ counter }}</div>
+                      <button @click="increment()">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Vuex</h2>
+          <iframe src="../demos/06/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <img src="images/are-you-crazy.jpg" alt="Are you crazy?">
+        </section>
+
+        <section>
+          <h2>Pinia 🍍</h2>
+          <div class="mermaid">
+            graph LR
+              Action --> State
+              Getter --computed--> State
+              Component --map--> Getter
+              Component --map--> State
+              Component --map--> Action
+          </div>
+          <p class="fragment left">Without time machine (no mutations no magic strings)</p>
+          <p class="fragment left">Without nested modules (no magic strings and single source of truth</p>
+          <p class="fragment left">Getters only for computed values</p>
+          <p class="fragment left">Simple, fast and lightweight</p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Pinia 🍍
+
+            ```js[1-3|5-9|11-14|16-24]
+            const state = {
+              counter: ref(0)
+            }
+
+            const actions = {
+              increment() {
+                state.counter.value += 1
+              }
+            }
+
+            const store = {
+              state,
+              actions
+            }
+
+            const component = {
+              computed: {
+                counter: () => store.state.counter.value
+              },
+              methods: {
+                increment: () => store.actions.increment()
+              },
+              template: `<div>count is {{ counter }}</div>
+                      <button @click="increment()">+</button>`
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Pinia 🍍</h2>
+          <iframe src="../demos/07/index.html" style="background: white"></iframe>
+        </section>
+
+        <section>
+          <h2>Pinia 🍍</h2>
+          <h3>in the Real World™️</h3>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Install 🍍
+
+            ```bash
+            npm install pinia@next
+            ```
+
+            ```js
+            // app.js
+            import { createPinia } from 'pinia'
+            app.use(createPinia())
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## 🍍 simple store
+
+            ```js
+            // store.js
+            import { defineStore } from 'pinia'
+
+            export const useStore = defineStore('counter', {
+              state: () => {
+                return { count: 0 }
+              },
+              actions: {
+                increment() {
+                  this.count++
+                },
+              },
+            })
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## 🍍 with component
+
+            ```js
+            import { mapState, mapActions } from 'pinia'
+            import { useStore } from '@/store'
+
+            export default {
+              computed: {
+                ...mapState(useStore, ['count'])
+              },
+              methods: {
+                ...mapActions(useStore, ['increment']),
+              },
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## 🍍 with setup
+
+            ```js
+            import { useStore } from '@/store'
+
+            export default {
+              setup() {
+                const store = useStore()
+                const { counter, increment } = store
+
+                return {
+                  counter,
+                  increment
+                }
+              },
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>Pinia 🍍</h2>
+          <h3>in the Real World™️</h3>
+          <iframe src="../demos/08/index.html" style="background: white"></iframe>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Demo
+
+            ```bash
+            npm create vite@latest todo-list --template vue-ts
+            cd todo-list
+            npm install
+            npm install --save pinia
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Demo
+
+            ```js[3,7]
+            // src/main.ts
+            import { createApp } from 'vue'
+            import { createPinia } from 'pinia';
+            import App from './App.vue'
+
+            createApp(App)
+              .use(createPinia())
+              .mount('#app')
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Demo
+
+            ```ts[2-6|8-18]
+            // src/store/index.ts
+            interface ToDoItem {
+              item: string,
+              id: number,
+              completed: boolean
+            }
+
+            export const useStore = defineStore("todoList", {
+              state: () => ({
+                todoList: [] as ToDoItem[],
+                id: 0
+              }),
+              actions: {
+                addTodo(item: string) {
+                  this.todoList.push({ item, id: this.id++, completed: false })
+                }
+              }
+            })
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Demo
+
+            ```js
+            // src/components/TodoForm.vue
+            import { ref } from "vue";
+            import { useStore } from "../store";
+            const store = useStore();
+
+            const todo = ref("");
+            const addItemAndClear = (item: string) => {
+                store.addTodo(item);
+                todo.value = "";
+            }
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>let's take a look 🍍</h2>
+        </section>
+
+        <section>
+          <h2>what about splitting it into files</h2>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Demo
+
+            ```ts[1-5|7-10|12-16|18-20|22-24|26-30|32-35]
+            type ToDoItem = {
+              item: string;
+              id: number;
+              completed: boolean;
+            }
+
+            type State = {
+              todoList: ToDoItem[],
+              id: number
+            }
+
+            const initialState: State = {
+                todoList: [],
+                id: 0,
+                showAlert: false
+            }
+
+            type Actions = {
+              addTodo(item: string): void
+            }
+
+            type ActionTree<A extends Record<string, (...args: any) => any>, S> = {
+              [Key in keyof A]: (this: S, ...p: Parameters<A[Key]>) => ReturnType<A[Key]>
+            }
+
+            const actions: ActionTree<Actions, State> = {
+              addTodo(item: string) {
+                this.todoList.push({ item, id: this.id++, completed: false })
+              }
+            }
+
+            export const useStore = defineStore('todoList', {
+              state: () => initialState,
+              actions
+            })
+            ```
+          </script>
+        </section>
+
+        <section>
+          <h2>let's take a look 🍍</h2>
+        </section>
+
+        <section>
+          <img src="images/make-ts-great-again.png" />
+          <h2 class="fragment">Thank you very much</h2>
+        </section>
+      </div>
+
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/search/search.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="dist/mermaid.min.js"></script>
+    <script>
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+        plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+      }).then( () => {
+        renderMermaidSlides();
+      });
+
+      Reveal.on( 'slidechanged', event => {
+        renderMermaidSlides();
+      });
+
+      function mermaidSlidesReadyToRender(s){
+        var diagram = s.querySelector(".mermaid")
+        if(diagram){
+          background = s.slideBackgroundElement;
+
+          if(!diagram.hasAttribute("data-processed") &&
+            background.hasAttribute("data-loaded") &&
+            background.style.display === "block"
+          )
+            return s;
+        }
+        return null;
+      }
+
+      function renderMermaidSlides(){
+        dSlides = Reveal.getSlides().filter(mermaidSlidesReadyToRender)
+        dSlides.forEach(item => mermaid.init(item.querySelector(".mermaid")));
+      }
+
+      mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+    </script>
+
+  </body>
+</html>

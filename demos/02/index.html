@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<title>Vue shared state</title>
+        <script src="vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1 :count="count" @increment="count++"></component1>
+            <component2 :count="count" @increment="count++"></component2>
+        </div>
+        <script>
+            const component1 = {
+                props: [ 'count' ],
+                template: `<div>count 1 is {{ count }}</div>
+                           <button @click="$emit('increment')">+</button>`
+            }
+            const component2 = {
+                props: [ 'count' ],
+                template: `<div>count 2 is {{ count }}</div>
+                           <button @click="$emit('increment')">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+
+          createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+                count: 0
+              }
+            }
+          }).mount('#app')
+        </script>
+    </body>
+</html>
+

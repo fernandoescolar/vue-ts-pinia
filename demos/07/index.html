@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<title>Vue pinia style</title>
+        <script src="vue.global.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <component1></component1>
+            <component2></component2>
+        </div>
+        <script>
+            const { ref } = Vue;
+
+            const state = {
+              counter: ref(0)
+            }
+
+            const actions = {
+              increment() {
+                state.counter.value += 1
+              }
+            }
+
+            const store = {
+              state,
+              actions
+            }
+
+            const component1 = {
+              computed: {
+                counter: () => store.state.counter.value
+              },
+              methods: {
+                increment: () => store.actions.increment()
+              },
+              template: `<div>count 1 is {{ counter }}</div>
+                         <button @click="increment()">+</button>`
+            }
+
+            const component2 = {
+              computed: {
+                counter: () => store.state.counter.value
+              },
+              methods: {
+                increment: () => store.actions.increment()
+              },
+              template: `<div>count 2 is {{ counter }}</div>
+                         <button @click="increment()">+</button>`
+            }
+        </script>
+
+        <script>
+          const { createApp } = Vue
+
+          createApp({
+            components: { component1, component2 },
+            data() {
+              return {
+              }
+            }
+          }).mount('#app')
+        </script>
+    </body>
+</html>
+
