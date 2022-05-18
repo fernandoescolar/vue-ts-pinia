@@ -14,10 +14,10 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="dist/reset.css">
-    <link rel="stylesheet" href="dist/reveal.css">
-    <link rel="stylesheet" href="dist/theme/moon.css" id="theme">
-    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="slides/dist/reset.css">
+    <link rel="stylesheet" href="slides/dist/reveal.css">
+    <link rel="stylesheet" href="slides/dist/theme/moon.css" id="theme">
+    <link rel="stylesheet" href="slides/plugin/highlight/monokai.css">
 
     <style>
       .reveal .code-wrapper code {
@@ -37,16 +37,16 @@
         <section>
           <h2>Vue + TypeScript + Pinia</h2>
           <p>
-            <img src="images/vue.png" alt="Vue" width="20%">
-            <img src="images/ts.png" alt="TypeScript" width="20%">
-            <img src="images/pinia.png" alt="Pinia" width="20%">
+            <img src="slides/images/vue.png" alt="Vue" width="20%">
+            <img src="slides/images/ts.png" alt="TypeScript" width="20%">
+            <img src="slides/images/pinia.png" alt="Pinia" width="20%">
           </p>
         </section>
 
         <section>
           <h2>About me</h2>
           <p class="left">
-            <img src="images/fernandoescolar.png" style="border-radius: 15px; box-shadow: 2px 2px 5px" alt="Fernando Escolar" width="20%" align="right">
+            <img src="slides/images/fernandoescolar.png" style="border-radius: 15px; box-shadow: 2px 2px 5px" alt="Fernando Escolar" width="20%" align="right">
             ❤️‍🔥 Estrella Galicia<br>
             🖕 Verdura<br>
             🎨 Naranja<br>
@@ -82,7 +82,7 @@
 
         <section>
           <h2>The problem</h2>
-          <iframe src="../demos/01/index.html" style="background: white"></iframe>
+          <iframe src="demos/01/index.html" style="background: white"></iframe>
         </section>
 
         <section data-markdown>
@@ -112,12 +112,12 @@
         </section>
 
         <section>
-          <iframe src="../demos/02/index.html" style="background: white"></iframe>
+          <iframe src="demos/02/index.html" style="background: white"></iframe>
         </section>
 
         <section>
           <h2>Components model</h2>
-          <img src="images/components.png" alt="Components">
+          <img src="slides/images/components.png" alt="Components">
         </section>
 
         <section data-markdown>
@@ -156,7 +156,7 @@
 
         <section>
           <h2>Mediator pattern</h2>
-          <iframe src="../demos/03/index.html" style="background: white"></iframe>
+          <iframe src="demos/03/index.html" style="background: white"></iframe>
         </section>
 
         <section>
@@ -224,7 +224,7 @@
 
         <section>
           <h2>Flux architecture</h2>
-          <iframe src="../demos/04/index.html" style="background: white"></iframe>
+          <iframe src="demos/04/index.html" style="background: white"></iframe>
         </section>
 
         <section>
@@ -281,7 +281,7 @@
 
         <section>
           <h2>Redux</h2>
-          <iframe src="../demos/05/index.html" style="background: white"></iframe>
+          <iframe src="demos/05/index.html" style="background: white"></iframe>
         </section>
 
         <section>
@@ -351,11 +351,11 @@
 
         <section>
           <h2>Vuex</h2>
-          <iframe src="../demos/06/index.html" style="background: white"></iframe>
+          <iframe src="demos/06/index.html" style="background: white"></iframe>
         </section>
 
         <section>
-          <img src="images/are-you-crazy.jpg" alt="Are you crazy?">
+          <img src="slides/images/are-you-crazy.jpg" alt="Are you crazy?">
         </section>
 
         <section>
@@ -410,7 +410,7 @@
 
         <section>
           <h2>Pinia 🍍</h2>
-          <iframe src="../demos/07/index.html" style="background: white"></iframe>
+          <iframe src="demos/07/index.html" style="background: white"></iframe>
         </section>
 
         <section>
@@ -501,7 +501,7 @@
         <section>
           <h2>Pinia 🍍</h2>
           <h3>in the Real World™️</h3>
-          <iframe src="../demos/08/index.html" style="background: white"></iframe>
+          <iframe src="demos/08/index.html" style="background: white"></iframe>
         </section>
 
         <section data-markdown>
@@ -573,8 +573,8 @@
 
             const todo = ref("");
             const addItemAndClear = (item: string) => {
-                store.addTodo(item);
-                todo.value = "";
+              store.addTodo(item);
+              todo.value = "";
             }
             ```
           </script>
@@ -605,9 +605,8 @@
             }
 
             const initialState: State = {
-                todoList: [],
-                id: 0,
-                showAlert: false
+              todoList: [],
+              id: 0
             }
 
             type Actions = {
@@ -637,20 +636,30 @@
         </section>
 
         <section>
-          <img src="images/make-ts-great-again.png" />
+          <img src="slides/images/make-ts-great-again.png" />
           <h2 class="fragment">Thank you very much</h2>
+        </section>
+
+        <section>
+          <h2>Links</h2>
+          <p class="left">
+            Slides: <a href="https://vuebcn.developerro.com">vuebcn.developerro.com</a>
+          </p>
+          <p class="left">
+            Source code: <a href="https://github.com/fernandoescolar/vue-ts-pinia">github.com/fernandoescolar/vue-ts-pinia</a>
+          </p>
         </section>
       </div>
 
     </div>
 
-    <script src="dist/reveal.js"></script>
-    <script src="plugin/zoom/zoom.js"></script>
-    <script src="plugin/notes/notes.js"></script>
-    <script src="plugin/search/search.js"></script>
-    <script src="plugin/markdown/markdown.js"></script>
-    <script src="plugin/highlight/highlight.js"></script>
-    <script src="dist/mermaid.min.js"></script>
+    <script src="slides/dist/reveal.js"></script>
+    <script src="slides/plugin/zoom/zoom.js"></script>
+    <script src="slides/plugin/notes/notes.js"></script>
+    <script src="slides/plugin/search/search.js"></script>
+    <script src="slides/plugin/markdown/markdown.js"></script>
+    <script src="slides/plugin/highlight/highlight.js"></script>
+    <script src="slides/dist/mermaid.min.js"></script>
     <script>
       Reveal.initialize({
         controls: true,

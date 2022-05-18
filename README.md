@@ -4,7 +4,7 @@ Here you can find the files and source code used during the session about Vue3 +
 
 ## Slides
 
-You can open in your browser the file `slides/index.html`.
+You can open in your browser the file `index.html`.
 
 ## Demos
 
